@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers');
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     // https://v1.quasar.dev/quasar-cli/supporting-ts
     supportTS: true,
@@ -22,6 +22,7 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'composition-api',
       'axios',
+      'vuelidate'
     ],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -33,7 +34,7 @@ module.exports = configure(function (/* ctx */) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-      // 'fontawesome-v5',
+       'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -80,8 +81,18 @@ module.exports = configure(function (/* ctx */) {
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       iconSet: 'material-icons', // Quasar icon set
-      lang: 'en-us', // Quasar language pack
-      config: {},
+      lang: 'es', // Quasar language pack
+      config: {
+        brand: {
+          primary: "#111c4c",
+          secondary: "#009688",
+          accent: "#313945",
+          positive: "#2E7D32",
+          negative: "#9B1D21",
+          info: "#2196F3",
+          warning: "#FFB300"
+        }
+      },
 
       // Possible values for "importStrategy":
       // * 'auto' - (DEFAULT) Auto-import needed Quasar components & directives
@@ -96,7 +107,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Notify', 'LoadingBar','Dialog','Loading','LocalStorage','SessionStorage']
     },
 
     // animations: 'all', // --- includes all animations
