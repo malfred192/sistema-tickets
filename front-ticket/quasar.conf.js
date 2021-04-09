@@ -20,10 +20,7 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v1.quasar.dev/quasar-cli/boot-files
     boot: [
-      'composition-api',
-      'axios',
-      'vuelidate'
-    ],
+      "composition-api","axios","vuelidate"],
 
     // https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
@@ -46,7 +43,21 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
+      scopeHoisting: true,
       vueRouterMode: 'hash', // available values: 'hash', 'history'
+
+
+      env: ctx.dev ? { 
+        API_URL: JSON.stringify('monitoreo/').replace(/['"]+/g, ''),
+URL_FILES : 'http://127.0.0.1:80/c_monitoreo/api/media/imagenes/', 
+        KEY:'DxQCgOJkEN4lGvVA84jJA2EWWAqV65FI'
+      } 
+      : 
+      { 
+        API_URL: JSON.stringify('http://127.0.0.1:8080/c-monitoreo/api/web/v1/monitoreo/'), 
+        URL_FILES : 'http://127.0.0.1:80/c_monitoreo/api/media/imagenes/',      
+        KEY:'DxQCgOJkEN4lGvVA84jJA2EWWAqV65FI' 
+      },
 
       // transpile: false,
 
@@ -66,15 +77,19 @@ module.exports = configure(function (ctx) {
 
       // https://v1.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (/* chain */) {
+      chainWebpack (cfg) {
         //
       },
     },
 
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
-      https: false,
-      port: 8080,
+     // https: false,
+     // port: 8080,
+     proxy: {
+      '/monitoreo': 'http://127.0.0.1:8080/c-monitoreo/api/web/v1', 
+      changeOrigin: true
+    },
       open: true // opens browser window automatically
     },
 
