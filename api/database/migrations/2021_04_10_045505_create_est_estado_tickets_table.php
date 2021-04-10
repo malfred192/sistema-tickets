@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Mockery\Generator\Parameter;
 
 class CreateEstEstadoTicketsTable extends Migration
 {
@@ -17,6 +18,7 @@ class CreateEstEstadoTicketsTable extends Migration
             $table->id('est_id');
             $table->string('est_nombre')->unique();
             $table->mediumText('est_descripcion');
+            $table->integer('est_orden');
             $table->integer('est_estado');
             $table->integer('est_usu_creacion');
             $table->timestamp('est_fecha_creacion')->useCurrent();
@@ -34,4 +36,5 @@ class CreateEstEstadoTicketsTable extends Migration
     {
         Schema::dropIfExists('est_estado_tickets');
     }
+
 }
