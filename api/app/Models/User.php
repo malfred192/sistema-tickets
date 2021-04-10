@@ -40,4 +40,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    //relacion uno a muchos
+    public function tickets(){
+        return $this->belongsTo('App\Models\Tic_ticket');
+    }
+
+
+    //relacion uno a uno Usuario - Tickets
+    public function roles()
+    {
+        return $this->belongsTo('App\Models\Rol_rol');
+    }
 }
