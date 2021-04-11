@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreNivelprioridad extends FormRequest
 {
+
+    protected $primaryKey = 'nip_id';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,8 +25,11 @@ class StoreNivelprioridad extends FormRequest
      */
     public function rules()
     {
+      //  dd($this->route('nprioridad')->nip_id);
+       //|unique:nip_nivel_prioridads,nip_nombre,'.$this->route('nprioridad')->nip_id 
+        
         return [
-            'nip_nombre'=>'required',
+            'nip_nombre'=>'required'
         ];
     }
 
@@ -39,6 +44,7 @@ class StoreNivelprioridad extends FormRequest
     {
         return [
             'nip_nombre.required'=>'Nombre de la Prioridad es requerido.',
+            'nip_nombre.unique'=>'El nivel de prioridad ya existe.',
         ];
     }
 }

@@ -6,10 +6,17 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
+    /*Llave primaria*/
+    protected $primaryKey = 'usu_id';
+
+    /*Asignamos el nombre de los campos para fechas de auditoria*/
+    const CREATED_AT = 'usu_fecha_creacion';
+    const UPDATED_AT = 'usu_fecha_modificacion';
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +27,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'usu_id_rol',
+        'usu_usu_creacion',
+        'usu_usu_modificacion',
+        'usu_estado'
     ];
 
     /**
