@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreNivelprioridad;
 use App\Models\Nip_nivel_prioridad;
+use App\Models\Oauth_access_token;
 use Illuminate\Http\Request;
 
 class NivelprioridadController extends Controller
@@ -18,7 +19,8 @@ class NivelprioridadController extends Controller
     public function index(Request $request)
     {
        /* dd($request->all());*/
-        return Nip_nivel_prioridad::all();
+       return Oauth_access_token::all();
+      //  return Nip_nivel_prioridad::all();
     }
 
 

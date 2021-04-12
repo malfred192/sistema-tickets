@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rol_rol;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +31,14 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Función que registra un inicio de sesión
+     * @param Request Data de Formulario de Incio de sesión
+     * @return Generar un inicio de sesión con las credenciales de un usuario.
+     * @author Manuel Hernández
+     * @since 2021-04-11
+     * @method POST
+     */
     public function login(Request $request){
 
         $login=$request->validate([
@@ -41,7 +50,19 @@ class UserController extends Controller
             return response(['message'=>'Las credenciales son invalidas.', 'autenticacion'=>false]);
         }
 
+        $usuario=Auth::user();
+
+        //Obteniendo los datos del rol del usuario
+        $rol=Rol_rol::findOrFail(Auth::user()->usu_id_rol);
+        $usuario['rol']=$rol->rol_nombre;
+        $usuario['rol_id']=$rol->rol_id;
+
         $accessToken= Auth::user()->createToken('authToken')->accessToken;
+
+        //Asignamos el token generado al usuario logueado
+        $usu=User::findOrFail(Auth::user()->usu_id);
+        /*$usu->remember_token=$accessToken;
+        $usu->save();*/
 
         return response(['user'=>Auth::user(), 'autenticacion'=>true, 'access_token'=>$accessToken]);
 
