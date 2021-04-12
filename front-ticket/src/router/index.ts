@@ -24,4 +24,4 @@ export default route<Store<StateInterface>>(function ({ Vue }) {
   });
 
   return Router;
-})
+});

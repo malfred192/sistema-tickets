@@ -5,6 +5,10 @@
         <q-btn flat @click="left = !left" round dense icon="menu" />
         <q-toolbar-title>SISTEMA TICKETS</q-toolbar-title>
 
+              <q-img class="absolute-top" src="~assets/bg_front.jpg" style="height: 0px">
+              </q-img>
+
+
         <q-btn round size="sm" color="info" icon="fas fa-sign-out-alt" @click="logout" />
       </q-toolbar>
     </q-header>
@@ -32,6 +36,7 @@
                 </q-item-section>
               </q-item>
                <q-expansion-item
+                v-if="rol==1"
                 expand-separator
                 icon="engineering"
                 label="MANTENIMIENTOS"
@@ -41,7 +46,8 @@
                 <q-list>
                   <q-card bordered class="my-card my-card bg-grey-1 shadow-5">
                     <q-card-section>
-                      <q-item clickable to="quinquenio">
+                      <q-item clickable to="quinquenio"
+                       v-if="rol==1">
                         <q-item-section avatar>
                           <q-icon color="secondary" name="fas fa-user" />
                         </q-item-section>
@@ -51,7 +57,8 @@
                         </q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable to="proceso">
+                      <q-item clickable to="proceso"
+                      v-if="rol==1">
                         <q-item-section avatar>
                           <q-icon color="accent" name="fas fa-signal" />
                         </q-item-section>
@@ -61,7 +68,8 @@
                         </q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable to="perspectiva-objetivo">
+                      <q-item clickable to="perspectiva-objetivo"
+                      v-if="rol==1">
                         <q-item-section avatar>
                           <q-icon color="positive" name="download_done" />
                         </q-item-section>
@@ -84,17 +92,18 @@
                 <q-list>
                   <q-card bordered class="my-card my-card bg-grey-1 shadow-5">
                     <q-card-section>
-                      <q-item clickable to="quinquenio">
+                      <q-item clickable to="ticket">
                         <q-item-section avatar>
                           <q-icon color="secondary" name="local_activity" />
                         </q-item-section>
                         <q-item-section>
-                          <q-item-label>Crear Tickets</q-item-label>
-                          <q-item-label caption>Generar Ticket</q-item-label>
+                          <q-item-label>Nuevo Tickets</q-item-label>
+                          <q-item-label caption>Crear Ticket</q-item-label>
                         </q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable to="proceso">
+                      <q-item clickable to="gestionarticket"
+                      v-if="rol==1">
                         <q-item-section avatar>
                           <q-icon color="accent" name="fas fa-cogs" />
                         </q-item-section>
@@ -148,8 +157,8 @@
               src="https://bpxk748cf4n2yzlvi1rkrh61-wpengine.netdna-ssl.com/wp-content/uploads/sites/17/2018/06/Avatar-Unisex-Default-253x300.jpg"
             />
           </q-avatar>
-          <div class="text-weight-bold">Manuel Hernández</div>
-          <div>Administrador</div>
+          <div class="text-weight-bold">{{ this.$store.state.auth.usuario.name}}</div>
+          <div>{{ this.$store.state.auth.usuario.rol }}</div>
         </div>
       </q-img>
     </q-drawer>
@@ -183,70 +192,28 @@
 
 
 <script lang="ts">
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksData = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
 import { loadingScreenMixin } from "../mixins/loadingScreenMixin";
 import { defineComponent, ref } from '@vue/composition-api';
+import Vuex from 'vuex';
+import axios from 'axios';
+import { LocalStorage } from 'quasar'
+
+
 
 export default defineComponent({
   name: 'MainLayout',
-  components: { EssentialLink },
+  components: {  },
   mixins: [loadingScreenMixin],
   setup() {
     const leftDrawerOpen = ref(false);
-    const essentialLinks = ref(linksData);
     const left =ref(false);
+    const rol=ref(LocalStorage.getItem("rol"));
     
 
-    return {leftDrawerOpen, essentialLinks, left}
+    return {leftDrawerOpen, left, rol}
   },
   methods: {
-    logout() {
+   async logout() {
       this.$q
         .dialog({
           title: "Confirme que desea cerrar sesión",
@@ -259,10 +226,37 @@ export default defineComponent({
           }
         })
         .onOk(() => {
+          const headers = { Authorization: `Bearer ${this.$store.state.auth.access_token}` };
+          this.$axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.auth.access_token}`
+          console.log(headers);
           this.$axios
-            .get(process.env.API_URL + "user/logout")
+            .post(process.env.API_URL + "logout")
             .then(response => {
+             this.$store.dispatch("auth/cerrarSesion");
+             this.$router.push({name:'login'});
+            })
+            .catch(error => {
+               if (error.response.status === 401) {
+                this.$router.push({name:'login'});
+              } 
+            });
+          
+
+  
+
+
+
+
+
+
+
+         /* this.$axios
+            .post(process.env.API_URL + "logout",headers)
+            .then(response => {
+              console.log("******************************");
+              console.log(response);
               this.$store.dispatch("auth/cerrarSesion");
+
               //window.location = "http://google.com";
             })
             .catch(error => {
@@ -273,9 +267,12 @@ export default defineComponent({
                   color: "negative"
                 });
               } */
-            });
-        });
+       //     });
+        }); //Fin de la opcion OK
     }
+  },
+  mounted(){
+    console.log(this.$store.state.auth.access_token);
   }
 });
 </script>

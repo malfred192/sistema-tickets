@@ -1,5 +1,6 @@
 import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
+import auth from './auth'
 
 // import example from './module-example';
 // import { ExampleStateInterface } from './module-example/state';
@@ -16,12 +17,14 @@ export interface StateInterface {
   example: unknown;
 }
 
+let myStore
+
 export default store(function ({ Vue }) {
   Vue.use(Vuex);
 
   const Store = new Vuex.Store<StateInterface>({
     modules: {
-      // example
+     auth
     },
 
     // enable strict mode (adds overhead!)
@@ -29,5 +32,11 @@ export default store(function ({ Vue }) {
     strict: !!process.env.DEBUGGING
   });
 
+  myStore=Store
+
   return Store;
 });
+
+export {myStore}
+
+

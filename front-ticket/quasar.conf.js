@@ -47,36 +47,13 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
 
-      env: ctx.dev ? { 
-        API_URL: JSON.stringify('monitoreo/').replace(/['"]+/g, ''),
-URL_FILES : 'http://127.0.0.1:80/c_monitoreo/api/media/imagenes/', 
-        KEY:'DxQCgOJkEN4lGvVA84jJA2EWWAqV65FI'
-      } 
-      : 
+      env: ctx.dev ? {API_URL: JSON.stringify('tickets/').replace(/['"]+/g, '')}:
       { 
-        API_URL: JSON.stringify('http://127.0.0.1:8080/c-monitoreo/api/web/v1/monitoreo/'), 
-        URL_FILES : 'http://127.0.0.1:80/c_monitoreo/api/media/imagenes/',      
-        KEY:'DxQCgOJkEN4lGvVA84jJA2EWWAqV65FI' 
+        API_URL: JSON.stringify('http://127.0.0.1:8000/api/'),
+        PRUEBA:ctx.dev
       },
 
-      // transpile: false,
-
-      // Add dependencies for transpiling with Babel (Array of string/regex)
-      // (from node_modules, which are by default not transpiled).
-      // Applies only if "transpile" is set to true.
-      // transpileDependencies: [],
-
-      // rtl: false, // https://v1.quasar.dev/options/rtl-support
-      // preloadChunks: true,
-      // showProgress: false,
-      // gzip: true,
-      // analyze: true,
-
-      // Options below are automatically set depending on the env, set them if you want to override
-      // extractCSS: false,
-
-      // https://v1.quasar.dev/quasar-cli/handling-webpack
-      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+     
       chainWebpack (cfg) {
         //
       },
@@ -87,8 +64,21 @@ URL_FILES : 'http://127.0.0.1:80/c_monitoreo/api/media/imagenes/',
      // https: false,
      // port: 8080,
      proxy: {
-      '/monitoreo': 'http://127.0.0.1:8080/c-monitoreo/api/web/v1', 
-      changeOrigin: true
+
+      '/tickets': {
+        target: 'http://127.0.0.1:8000/api',
+        changeOrigin: true,
+        https: false,
+        pathRewrite: {
+          '^/tickets': ''
+        }
+      },
+
+
+
+
+     // '/monitoreo': 'http://127.0.0.1:8000/api', 
+      changeOrigin: true,
     },
       open: true // opens browser window automatically
     },
