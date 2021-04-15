@@ -31,8 +31,9 @@ use Illuminate\Support\Facades\Route;
 
   Route::post('/users',[UserController::class,'store']);
   Route::post('/login',[UserController::class,'login']);
- 
 
+  Route::post('/validaremail',[UserController::class,'validarEmail']);
+ 
 
   Route::middleware('auth:api')->group(function () {
     Route::post('/logout',[UserController::class,'logout']);
@@ -47,6 +48,8 @@ use Illuminate\Support\Facades\Route;
     Route::apiResource('/historicoticket',SeguimientoticketController::class);
 
   });
+
+
 
 
 

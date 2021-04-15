@@ -22,6 +22,9 @@ class UserController extends Controller
 
         $input=$request->all();
         $input['password']=Hash::make($request->password);
+        $input['usu_estado']=1;
+        $input['usu_usu_creacion']=0;
+        $input['usu_usu_modificacion']=0;
 
         User::create($input);
         return response()->json([
@@ -91,6 +94,21 @@ class UserController extends Controller
         $usuario['rol_id']=$rol->rol_id;
 
        return $usuario;
+    }
+
+    public function validarEmail(Request $data){
+
+       // dd($data->email);
+
+        $band=0;
+
+        $registro = User::select('email')
+        ->where('email', $data->email)
+       ->get();
+
+        return $registro;
+
+
     }
 
    
