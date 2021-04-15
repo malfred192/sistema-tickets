@@ -9,6 +9,7 @@ API: Desarrollado en Laravel version 8.0
 FRONT: Desarrollado con VueJs utilizando el framework Quasar Framework.
 
 Funcionalidades adicionales al sistema:
+- Creacion de base de datos desde migraciones.
 - Inicio de sesión.
 - Registro de usuarios con opcion de elegir un rol (para efectos de prueba)
 - validación de formularios.
