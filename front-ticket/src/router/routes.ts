@@ -30,7 +30,7 @@ const routes: RouteConfig[] = [
         name: "ticket", 
         component: () => import('pages/Ticket/index.vue'),
         beforeEnter: (to, from, next) => {
-          if (SessionStorage.getItem("rol") == 3 ) {
+          if (SessionStorage.getItem("rol") == 1 ) {
             next("/");
           } else {
             next();

@@ -92,7 +92,7 @@
                 <q-list>
                   <q-card bordered class="my-card my-card bg-grey-1 shadow-5">
                     <q-card-section>
-                      <q-item clickable to="ticket">
+                      <q-item clickable to="ticket"  v-if="rol==2">
                         <q-item-section avatar>
                           <q-icon color="secondary" name="local_activity" />
                         </q-item-section>

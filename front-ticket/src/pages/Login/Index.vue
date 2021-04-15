@@ -57,7 +57,7 @@
                   <q-btn label="Iniciar Sesión" size="lg" type="submit" color="primary"/>
                 </div>
                 <q-card-section class="text-center">
-                   <div class="row flex">
+                   <div class="row justify-center">
                     <div class="col-md-6 col-sm-12 col-xs-12 q-pa-xs">
                       <q-btn flat label="Registrarse" size="md" color="primary"  @click="modalRegistro=true" outline />
                     </div>
