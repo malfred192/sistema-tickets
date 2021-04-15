@@ -49,11 +49,14 @@
           clearable 
           mask="##/##/####"
           hint="DD/MM/YYYY"
+          @blur="$v.fecha_inicio.$touch"  :error="$v.fecha_inicio.$error"
+                          :error-message="`${checkErr('Fecha Inicio', $v.fecha_inicio)}`"
             >
               <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                      <q-date v-model="fecha_inicio" @input="() =>validarFechas()" mask="DD-MM-YYYY"/>
+                      <q-date v-model="fecha_inicio" @input="() =>validarFechas()" mask="DD-MM-YYYY"
+                          />
                   </q-popup-proxy>
                   </q-icon>
               </template>
@@ -87,15 +90,11 @@
       </div>
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-xs">
         <q-table
-          class="my-sticky-virtscroll-table"
-          virtual-scroll
-          :pagination.sync="pagination"
-          :rows-per-page-options="[0]"
-          :virtual-scroll-sticky-size-start="48"
-          row-key="index"
-          :data="data"
-          :columns="columns"
-
+         title="Tickets Registrados"
+      :data="data"
+      :columns="columns"
+      row-key="name"
+          
         >
         <!-- Modificando slot del body para agregar iconos -->
               <q-tr slot="body" slot-scope="props" :props="props">
@@ -167,11 +166,6 @@
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12 q-pa-xs">
         <q-table
-          class="my-sticky-virtscroll-table"
-          virtual-scroll
-          :pagination.sync="pagination"
-          :rows-per-page-options="[0]"
-          :virtual-scroll-sticky-size-start="48"
           row-key="index"
           :data="dataHistorico"
           :columns="columnsHistorico"
@@ -260,7 +254,7 @@ export default {
 
 
       pagination: {
-        rowsPerPage: 0
+        rowsPerPage: 5
       },
 
       columns: [
@@ -287,9 +281,10 @@ export default {
   validations() {
         return {
             fecha_fin:{
-              required: requiredIf(function () {
-                return this.fecha_inicio!=''
-              })
+              required: required
+            },
+            fecha_inicio:{
+              required: required
             },
         };
     },

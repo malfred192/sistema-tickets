@@ -141,6 +141,7 @@ class TicketController extends Controller
                 ->leftjoin('nip_nivel_prioridads', 'nip_id', '=', 'tic_id_nip')
                 ->leftjoin('sgt_seguimiento_tickets', 'sgt_id_tic', '=', 'tic_id')
                 ->leftjoin('est_estado_tickets', 'est_id', '=', 'sgt_id_esc')
+                ->leftjoin('users', 'usu_id', '=', 'tic_id_usr')
                 ->where('tic_estado', 1)
                 ->where('tic_id_usr',Auth::user()->usu_id)
                 ->titulo($info->titulo)
@@ -151,8 +152,8 @@ class TicketController extends Controller
         }else{
             $tickets = Tic_ticket::select('tic_tickets.*', 'nip_nombre', 'users.name')
                 ->leftjoin('nip_nivel_prioridads', 'nip_id', '=', 'tic_id_nip')
-                ->estadoactual()
                 ->leftjoin('users', 'usu_id', '=', 'tic_id_usr')
+                ->estadoactual()
                 ->where('tic_estado', 1)
                 ->titulo($info->titulo)
                 ->prioridad($info->prioridad)
@@ -176,6 +177,8 @@ class TicketController extends Controller
      */
     public function gestionar_tickets(Request $info){
 
+       // dd($info->estado, $info->titulo, $info->prioridad, $info->fecha_inicio, $info->fecha_fin );
+
         if($info->estado!=null){
             $tickets = Tic_ticket::select('tic_tickets.*', 'nip_nombre', 'est_nombre','users.name')
                     ->leftjoin('nip_nivel_prioridads', 'nip_id', '=', 'tic_id_nip')
@@ -191,14 +194,14 @@ class TicketController extends Controller
             }else{
                 $tickets = Tic_ticket::select('tic_tickets.*', 'nip_nombre', 'users.name')
                     ->leftjoin('nip_nivel_prioridads', 'nip_id', '=', 'tic_id_nip')
-                    ->estadoactual()
                     ->leftjoin('users', 'usu_id', '=', 'tic_id_usr')
                     ->where('tic_estado', 1)
                     ->titulo($info->titulo)
                     ->prioridad($info->prioridad)
                     ->date($info->fecha_inicio, $info->fecha_fin)
-                    ->estado($info->estado)
+                    ->estadoactual()
                     ->get();
+
             }
 
 

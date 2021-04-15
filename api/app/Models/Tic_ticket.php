@@ -59,6 +59,8 @@ class Tic_ticket extends Model
 
     public function scopeDate($query, $fecha_inicio, $fecha_fin){
 
+       // dd($fecha_inicio, $fecha_fin);
+
         if(date($fecha_inicio) != date($fecha_fin)){
         //return $query->whereBetween('tic_fecha_creacion', [date($fecha_inicio), date($fecha_fin)]);
         return $query->whereDate('tic_fecha_creacion', '>=', date($fecha_inicio))

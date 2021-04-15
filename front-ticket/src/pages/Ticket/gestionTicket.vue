@@ -49,6 +49,8 @@
           clearable 
           mask="##/##/####"
           hint="DD/MM/YYYY"
+          @blur="$v.fecha_inicio.$touch"  :error="$v.fecha_inicio.$error"
+                          :error-message="`${checkErr('Fecha Inicio', $v.fecha_inicio)}`"
             >
               <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
@@ -87,11 +89,6 @@
       </div> -->
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-xs">
         <q-table
-          class="my-sticky-virtscroll-table"
-          virtual-scroll
-          :pagination.sync="pagination"
-          :rows-per-page-options="[0]"
-          :virtual-scroll-sticky-size-start="48"
           row-key="index"
           :data="data"
           :columns="columns"
@@ -157,11 +154,6 @@
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12 q-pa-xs">
         <q-table
-          class="my-sticky-virtscroll-table"
-          virtual-scroll
-          :pagination.sync="pagination"
-          :rows-per-page-options="[0]"
-          :virtual-scroll-sticky-size-start="48"
           row-key="index"
           :data="dataHistorico"
           :columns="columnsHistorico"
@@ -317,9 +309,10 @@ export default {
   validations() {
         return {
             fecha_fin:{
-              required: requiredIf(function () {
-                return this.fecha_inicio!=''
-              })
+              required: required
+            },
+            fecha_inicio:{
+              required: required
             },
         };
     },
@@ -360,12 +353,13 @@ export default {
          
         }
 
+
           const params = {
             titulo:this.titulo, //publicados
-            fecha_inicio:(this.fecha_inicio!='')?moment(this.fecha_inicio,'DD/MM/YYYY').format('YYYY-MM-DD'):null,
-            fecha_fin:(this.fecha_fin!='')?moment(this.fecha_fin,'DD/MM/YYYY').format('YYYY-MM-DD'):null,
+            fecha_inicio:(this.fecha_inicio!='' && this.fecha_inicio!=null )?moment(this.fecha_inicio,'DD/MM/YYYY').format('YYYY-MM-DD'):null,
+            fecha_fin:(this.fecha_fin!='' && this.fecha_fin!=null)?moment(this.fecha_fin,'DD/MM/YYYY').format('YYYY-MM-DD'):null,
             prioridad:this.prioridad,
-            estado:this.estado
+            estado:(this.estado!='')?this.estado:null
           };
 
 
