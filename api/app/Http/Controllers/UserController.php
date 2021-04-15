@@ -61,27 +61,9 @@ class UserController extends Controller
 
         //Asignamos el token generado al usuario logueado
         $usu=User::findOrFail(Auth::user()->usu_id);
-        /*$usu->remember_token=$accessToken;
-        $usu->save();*/
 
         return response(['user'=>Auth::user(), 'autenticacion'=>true, 'access_token'=>$accessToken]);
 
-       /* $user=User::whereEmail($request->email)->first();
-
-        if(!is_null($user) && Hash::check($request->password, $user->password)){
-            /*$user->api_token
-            $user->save();*/
-        /*    return response()->json([
-                'res'=> true,
-                'token'=> $user->api_token,
-                'message'=>'Bienvenido al Sistema'
-            ],200); 
-        }else{
-            return response()->json([
-                'res'=> false,
-                'message'=>'Cuenta o passwor Incorrectos'
-            ],200);
-        }*/
     }
 
 
@@ -97,6 +79,18 @@ class UserController extends Controller
             'res'=> true,
             'message'=>'Adios'
         ],200);
+    }
+
+
+    public function validarUsuario(){
+        $usuario=Auth::user();
+
+        //Obteniendo los datos del rol del usuario
+        $rol=Rol_rol::findOrFail(Auth::user()->usu_id_rol);
+        $usuario['rol']=$rol->rol_nombre;
+        $usuario['rol_id']=$rol->rol_id;
+
+       return $usuario;
     }
 
    

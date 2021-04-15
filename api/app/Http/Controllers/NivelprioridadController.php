@@ -18,9 +18,7 @@ class NivelprioridadController extends Controller
      */
     public function index(Request $request)
     {
-       /* dd($request->all());*/
-       return Oauth_access_token::all();
-      //  return Nip_nivel_prioridad::all();
+        return Nip_nivel_prioridad::all();
     }
 
 

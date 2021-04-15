@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEstadoTicket;
+use App\Models\Est_estado_ticket;
 use Illuminate\Http\Request;
 
 class EstadoticketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+    
+     /**
+     * Lista los registros de estados de tickets.
+     * @param none
+     * @return objeto json
+     * @author Manuel Hernández
+     * @since 2021-04-14
+     * @method GET
      */
     public function index()
     {
-        //
+        return Est_estado_ticket::all();
     }
 
     /**
