@@ -59,9 +59,6 @@
                 <q-card-section class="text-center">
                    <div class="row flex">
                     <div class="col-md-6 col-sm-12 col-xs-12 q-pa-xs">
-                        <q-btn flat label="¿Olvido su contraseña?" size="md" color="primary" @click="modalResetPassword=true"  outline />
-                    </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12 q-pa-xs">
                       <q-btn flat label="Registrarse" size="md" color="primary"  @click="modalRegistro=true" outline />
                     </div>
                   </div>
@@ -97,33 +94,6 @@
 
       <!-- ############################################################ FIN MODAL PARAM. RESPUESTAS ######################################################################## -->
 
-      <!-- ############################################################ MODAL PARAM. RECUPERAR CONTRASEÑA ######################################################################## -->
-
-      <q-dialog v-model="modalResetPassword" persistent>
-        <q-card style="width: 650px; max-width: 90vw;">
-          <q-bar dark class="bg-primary text-white">
-            <div class="col text-center text-weight-bold">
-              <div>Recuperar Contraseña</div>
-            </div>
-            <q-space />
-            <q-btn dense flat icon="close" v-close-popup>
-              <q-tooltip>Cerrar</q-tooltip>
-            </q-btn>
-          </q-bar>
-
-          <!-- Formulario importado -->
-          <q-card-section class="row justify-center">
-            <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12 q-pa-xs">
-                  <password v-on:close-modal="cerrarModal(2)"  @mensaje="mensaje = $event" ></password> 
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </q-dialog>
-
-      <!-- ############################################################ FIN MODAL PARAM. RESPUESTAS ######################################################################## -->
-
       <!-- #############################################################  MODAL MENSAJE  ############################################### -->
       <q-dialog v-model="modalMensaje">
       <q-card>
@@ -148,9 +118,8 @@
 </template>
 
 <script>
-import { LocalStorage, SessionStorage } from 'quasar'
+import { SessionStorage } from 'quasar'
 import registro from './formRegistro.vue';
-import password from './resetPassword.vue';
 import moment from 'moment'; //moment Js
 import { errorCheckMsjMixin } from "../../mixins/errorCheckMsjMixin";
 import {notifyMixin} from "../../mixins/notifyMixin";
@@ -170,8 +139,7 @@ import { loadingScreenMixin } from "../../mixins/loadingScreenMixin";
   import Vuex from "vuex"; //importando vuex;
     export default {
       components:{
-        registro,
-        password
+        registro
       },
       name: 'login',
       mixins: [notifyMixin, errorCheckMsjMixin, loadingScreenMixin ],
@@ -220,10 +188,11 @@ import { loadingScreenMixin } from "../../mixins/loadingScreenMixin";
                 this.usuario.email=null;
                 this.usuario.password=null;
               }else{
-                LocalStorage.set("key", this.$store.state.auth.access_token)
-                LocalStorage.set("usuario", this.$store.state.auth.usuario)
-                LocalStorage.set("authenticated", this.$store.state.auth.authenticated)
-                LocalStorage.set("rol", this.$store.state.auth.usuario.rol_id)
+                SessionStorage.set("key", this.$store.state.auth.access_token)
+                SessionStorage.set("usuario", this.$store.state.auth.usuario)
+                SessionStorage.set("authenticated", this.$store.state.auth.authenticated)
+                SessionStorage.set("rol", this.$store.state.auth.usuario.rol_id)
+                 SessionStorage.set("usu_id", this.$store.state.auth.usuario.usu_id)
                 this.$router.push({name:'inicio'});
               }
              this.mostrar_alerta('Sesión iniciada con éxito, !Bienvenido¡')

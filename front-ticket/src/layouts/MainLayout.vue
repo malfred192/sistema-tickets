@@ -97,7 +97,7 @@
                           <q-icon color="secondary" name="local_activity" />
                         </q-item-section>
                         <q-item-section>
-                          <q-item-label>Nuevo Tickets</q-item-label>
+                          <q-item-label>Tickets</q-item-label>
                           <q-item-label caption>Crear Ticket</q-item-label>
                         </q-item-section>
                       </q-item>
@@ -196,7 +196,7 @@ import { loadingScreenMixin } from "../mixins/loadingScreenMixin";
 import { defineComponent, ref } from '@vue/composition-api';
 import Vuex from 'vuex';
 import axios from 'axios';
-import { LocalStorage } from 'quasar'
+import { SessionStorage  } from 'quasar'
 
 
 
@@ -207,10 +207,11 @@ export default defineComponent({
   setup() {
     const leftDrawerOpen = ref(false);
     const left =ref(false);
-    const rol=ref(LocalStorage.getItem("rol"));
+    const rol=ref(SessionStorage.getItem("rol"));
+    const dialog=ref(false);
     
 
-    return {leftDrawerOpen, left, rol}
+    return {leftDrawerOpen, left, rol, dialog}
   },
   methods: {
    async logout() {
@@ -226,13 +227,15 @@ export default defineComponent({
           }
         })
         .onOk(() => {
-          const headers = { Authorization: `Bearer ${this.$store.state.auth.access_token}` };
           this.$axios.defaults.headers.common['Authorization'] = `Bearer ${this.$store.state.auth.access_token}`
-          console.log(headers);
           this.$axios
             .post(process.env.API_URL + "logout")
             .then(response => {
              this.$store.dispatch("auth/cerrarSesion");
+                SessionStorage.remove("key")
+                SessionStorage.remove("usuario")
+                SessionStorage.remove("authenticated")
+                SessionStorage.remove("rol")
              this.$router.push({name:'login'});
             })
             .catch(error => {
@@ -240,39 +243,46 @@ export default defineComponent({
                 this.$router.push({name:'login'});
               } 
             });
-          
-
-  
-
-
-
-
-
-
-
-         /* this.$axios
-            .post(process.env.API_URL + "logout",headers)
-            .then(response => {
-              console.log("******************************");
-              console.log(response);
-              this.$store.dispatch("auth/cerrarSesion");
-
-              //window.location = "http://google.com";
-            })
-            .catch(error => {
-              /* if (error.response.data.code === 23000) {
-                this.$q.notify({
-                  message:
-                    "No es posible eliminar, hay registros que dependen de él",
-                  color: "negative"
-                });
-              } */
-       //     });
         }); //Fin de la opcion OK
     }
   },
-  mounted(){
-    console.log(this.$store.state.auth.access_token);
+ async mounted(){
+
+     try {
+       let token= this.$store.state.auth.access_token;
+       if(token==null){
+         token=SessionStorage.getItem("key");
+       }
+
+      this.$axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+       const json = await axios.post(process.env.API_URL + `validarusuario`);
+        if(JSON.stringify(json.data)!='[]'){
+          
+          let user
+         
+           user={
+              usu:{
+                email:json.data.email,
+                name:json.data.name,
+                rol:json.data.rol,
+                rol_id:json.data.rol_id,
+                usu_id:json.data.usu_id
+              },
+               access_token:token
+            }
+  
+    
+          await this.$store.dispatch("auth/setUser", user);
+         }
+     } catch (error) {
+       console.log(error);
+       if (error.response.status === 401) {
+           this.$router.push("/Login");
+       }
+     }
+
+
+
   }
 });
 </script>

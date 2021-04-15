@@ -1,9 +1,10 @@
 import { RouteConfig } from 'vue-router';
 import store from "../store"
-import { LocalStorage, SessionStorage } from 'quasar'
+import { SessionStorage } from 'quasar'
 
-let rol=LocalStorage.getItem("rol");
-let authenticated=LocalStorage.getItem("authenticated");
+
+let rol=SessionStorage.getItem("rol");
+let authenticated=SessionStorage.getItem("authenticated");
 const routes: RouteConfig[] = [
   {
     path: '/',
@@ -15,7 +16,7 @@ const routes: RouteConfig[] = [
         name: "inicio", 
         component: () => import('pages/Index.vue'),
        beforeEnter: (to, from, next) => {
-          if (LocalStorage.getItem("authenticated") == false) {
+          if (SessionStorage.getItem("authenticated") == false) {
             next("/");
           } else {
             next();
@@ -25,29 +26,37 @@ const routes: RouteConfig[] = [
 
       /* Sección de tickets */
       { 
-        path: '/tickets',
+        path: '/ticket',
         name: "ticket", 
         component: () => import('pages/Ticket/index.vue'),
         beforeEnter: (to, from, next) => {
-          if (LocalStorage.getItem("rol") == 1 || LocalStorage.getItem("rol") == 2 ) {
+          if (SessionStorage.getItem("rol") == 3 ) {
             next("/");
           } else {
             next();
           }
         },
-      }
+      },
+
+      /*Nuevo o editar Tickets*/
+      {
+        path: "/administrarTicket",
+        name: "administrarTicket",
+        component: () => import("pages/Ticket/formTicket.vue"),
+        props: true,
+      },
 
       /* Gestion de tickets */
 
       { 
         path: '/gestionarticket',
         name: "gestionarticket", 
-        component: () => import('pages/Ticket/gestionTicket.vue'),
+        component: () => import('src/pages/Ticket/gestionTicket.vue'),
         beforeEnter: (to, from, next) => {
-          if (LocalStorage.getItem("rol") == 2) {
+          if (SessionStorage.getItem("rol") == 2) {
             next("/");
           } else {
-            console.log(LocalStorage.getItem("authenticated"));
+            console.log(SessionStorage.getItem("authenticated"));
             next();
           }
         },
@@ -69,16 +78,6 @@ const routes: RouteConfig[] = [
         path: "/Login",
         name: "login",
         component: () => import("pages/Login/Index.vue"),
-      },
-      {
-        path: "/reset_password/:id",
-        name: "reset_password",
-        component: () => import("pages/Login/reset_passwordForm.vue"),
-      },
-      {
-        path: "/sesionconamype",
-        name: "sesionconamype",
-        component: () => import("pages/Login/sesionConamype.vue"),
       },
     ],
   },
